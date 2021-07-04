@@ -2,6 +2,9 @@ package kg.tutorialapp.myweather
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import kg.tutorialapp.myweather.models.ForeCast
@@ -18,15 +21,51 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-//    val example=SingleTonExample.getInstance()
 
+//    val example=SingleTonExample.getInstance()
+    private var workResult=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fetchWeatherUsingQuery()
+//        fetchWeatherUsingQuery()
+        setup()
 //
     }
 
+    private fun setup() {
+        val btn_start=findViewById<Button>(R.id.btn_start)
+        val btn_show=findViewById<Button>(R.id.btn_showToast)
+        btn_start.setOnClickListener {
+            doSomeWork()
+        }
+        btn_show.setOnClickListener {
+            Toast.makeText(this,"HELLO",Toast.LENGTH_LONG).show()
+        }
+
+    }
+    private fun doSomeWork(){
+        val tv_counter=findViewById<TextView>(R.id.counter)
+
+        for (i in 0..4) {
+                Thread.sleep(1000)
+                workResult++
+            }
+
+        tv_counter.text=workResult.toString()
+
+    //        Thread(Runnable {
+//            for (i in 0..4) {
+//                Thread.sleep(1000)
+//                workResult++
+//            }
+//            runOnUiThread{
+//                tv_counter.text=workResult.toString()
+//            }
+////            Handler(Looper.getMainLooper()).post(Runnable {
+////                tv_counter.text=workResult.toString()
+////            })
+//        }).start()
+    }
 
     private fun fetchWeatherUsingQuery() {
         val call = WeatherClient.weatherApi.fetchWeatherUsingQuery(lat = 40.513996, lon = 72.816101)
