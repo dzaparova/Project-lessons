@@ -1,8 +1,12 @@
 package kg.tutorialapp.myweather.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
+@Entity
 data class ForeCast(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long?=null,
     var lat: Double? = null,
     var lon: Double? = null,
     var timezone: String? = null,
@@ -10,7 +14,9 @@ data class ForeCast(
     var current: CurrentForeCast? = null,
     var hourly: List<HourlyForeCast>? = null,
     var daily: List<DailyForeCast>? = null
-)
+) {
+
+}
 
 data class CurrentForeCast(
     @SerializedName("dt")

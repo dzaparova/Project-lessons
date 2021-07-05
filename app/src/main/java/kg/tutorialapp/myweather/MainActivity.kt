@@ -19,6 +19,8 @@ import kg.tutorialapp.myweather.models.ForeCast
 import kg.tutorialapp.myweather.models.Post
 import kg.tutorialapp.myweather.network.PostApi
 import kg.tutorialapp.myweather.network.WeatherApi
+import kg.tutorialapp.myweather.storage.ForeCastDao
+import kg.tutorialapp.myweather.storage.ForeCastDateBase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.reactivestreams.Publisher
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
         btn_show.setOnClickListener {
             Toast.makeText(this,"HELLO",Toast.LENGTH_LONG).show()
+            ForeCastDateBase.getInstance(applicationContext).forecastDao().insert(ForeCast(lat=52255.515))
         }
 
     }
@@ -141,30 +144,30 @@ class MainActivity : AppCompatActivity() {
 //        }).start()
 
 
-    private fun fetchWeatherUsingQuery() {
-        val call = WeatherClient.weatherApi.fetchWeatherUsingQuery(lat = 40.513996, lon = 72.816101)
-        val textView1 = findViewById<TextView>(R.id.textView1)
-        val textView2 = findViewById<TextView>(R.id.textView2)
-        call.enqueue(object : Callback<ForeCast> {
-            override fun onResponse(call: Call<ForeCast>, response: Response<ForeCast>) {
-                if (response.isSuccessful) {
-                    val foreCast = response.body()
-                    foreCast?.let {
-                        textView1.text = it.current?.weather!![0].description
-                        textView2.text = it.current?.temp.toString()
-//                        Toast.makeText(this@MainActivity, it.toString(), Toast.LENGTH_LONG).show()
-                    }
-
-                }
-
-            }
-
-            override fun onFailure(call: Call<ForeCast>, t: Throwable) {
-                Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_LONG).show()
-            }
-
-        })
-    }
+//    private fun fetchWeatherUsingQuery() {
+//        val call = WeatherClient.weatherApi.fetchWeatherUsingQuery(lat = 40.513996, lon = 72.816101)
+//        val textView1 = findViewById<TextView>(R.id.textView1)
+//        val textView2 = findViewById<TextView>(R.id.textView2)
+//        call.enqueue(object : Callback<ForeCast> {
+//            override fun onResponse(call: Call<ForeCast>, response: Response<ForeCast>) {
+//                if (response.isSuccessful) {
+//                    val foreCast = response.body()
+//                    foreCast?.let {
+//                        textView1.text = it.current?.weather!![0].description
+//                        textView2.text = it.current?.temp.toString()
+////                        Toast.makeText(this@MainActivity, it.toString(), Toast.LENGTH_LONG).show()
+//                    }
+//
+//                }
+//
+//            }
+//
+//            override fun onFailure(call: Call<ForeCast>, t: Throwable) {
+//                Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_LONG).show()
+//            }
+//
+//        })
+//    }
     companion object{
         const val TAG="RX"
     }
