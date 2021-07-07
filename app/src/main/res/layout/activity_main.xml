@@ -6,85 +6,154 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" 0 "
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/ed_id"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="START WORK ON MAIN THREAD"
-        app:layout_constraintBottom_toTopOf="@+id/btn_showToast"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/counter" />
-
-    <Button
-        android:id="@+id/btn_showToast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Toast"
-        app:layout_constraintBottom_toTopOf="@+id/switch1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_start" />
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="352dp"
-        android:text="Switch"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="212dp"
-        android:text="TextView"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:hint="ID"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/ed_lat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
-        app:layout_constraintBottom_toTopOf="@+id/textView1"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="20dp"
+        android:hint="lat"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/ed_long"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_id" />
+
+    <EditText
+        android:id="@+id/ed_long"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:hint="lon"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/ed_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1"
-        app:layout_constraintVertical_bias="0.197" />
+        app:layout_constraintTop_toBottomOf="@+id/ed_lat" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <EditText
+        android:id="@+id/ed_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+         android:hint="description"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_long" />
+
+    <Button
+        android:id="@+id/btn_insert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:text="Itsert"
+        app:layout_constraintBottom_toTopOf="@+id/btn_query"
+        app:layout_constraintEnd_toStartOf="@+id/btn_update"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_description" />
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Update"
+        app:layout_constraintBottom_toTopOf="@+id/btn_query_get_all"
+        app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+        app:layout_constraintStart_toEndOf="@+id/btn_insert"
+        app:layout_constraintTop_toBottomOf="@+id/ed_description" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="delete"
+        app:layout_constraintBottom_toTopOf="@+id/btn_query_get_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_update"
+        app:layout_constraintTop_toBottomOf="@+id/ed_description" />
+
+    <Button
+        android:id="@+id/btn_query"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:text="query"
+        app:layout_constraintEnd_toStartOf="@+id/btn_query_get_all"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_insert" />
+
+    <Button
+        android:id="@+id/btn_query_get_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:text="btn_query_get_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_query"
+        app:layout_constraintTop_toBottomOf="@+id/btn_update" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:ignore="MissingConstraints"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_query">
+    <TextView
+        android:id="@+id/tv_forecast_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="empty"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_query" />
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

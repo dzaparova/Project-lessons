@@ -10,12 +10,15 @@ data class ForeCast(
     var lat: Double? = null,
     var lon: Double? = null,
     var timezone: String? = null,
-    var timezone_offset: Long? = 0L,
+    var timezone_offset: Long? = null,
     var current: CurrentForeCast? = null,
     var hourly: List<HourlyForeCast>? = null,
     var daily: List<DailyForeCast>? = null
-) {
-
+){
+    override fun toString(): String {
+        return "ID:${id?.toString()}\nLAT:${lat?.toString()}\nLON:${lon?.toString()}"+
+                "\nDESC:${current?.weather?.get(0)?.description}\n\n"
+    }
 }
 
 data class CurrentForeCast(

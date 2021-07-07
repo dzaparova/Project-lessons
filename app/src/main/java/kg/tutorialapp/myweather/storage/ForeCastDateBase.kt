@@ -6,10 +6,11 @@ import kg.tutorialapp.myweather.models.ForeCast
 
 @Database(
     entities = [ForeCast::class],
-    version = 0,
+    version = 1,
     exportSchema = false
 )
-@TypeConverters(ModelsConverter ::class,  CollectionConverter::class)
+
+@TypeConverters(ModelsConverter ::class, CollectionsConverter::class)
 abstract class ForeCastDateBase: RoomDatabase() {
     abstract fun forecastDao():ForeCastDao
 

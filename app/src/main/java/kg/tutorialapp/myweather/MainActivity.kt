@@ -4,9 +4,13 @@ package kg.tutorialapp.myweather
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import android.view.View
 
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import io.reactivex.Observable
@@ -15,117 +19,122 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kg.tutorialapp.myweather.models.CurrentForeCast
 import kg.tutorialapp.myweather.models.ForeCast
-import kg.tutorialapp.myweather.models.Post
-import kg.tutorialapp.myweather.network.PostApi
-import kg.tutorialapp.myweather.network.WeatherApi
-import kg.tutorialapp.myweather.storage.ForeCastDao
+import kg.tutorialapp.myweather.models.Weather
+import kg.tutorialapp.myweather.network.WeatherClient
 import kg.tutorialapp.myweather.storage.ForeCastDateBase
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import org.reactivestreams.Publisher
-import org.reactivestreams.Subscriber
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
-import java.util.concurrent.Flow
 import kotlin.String as String
 
-class MainActivity : AppCompatActivity() {
-
-
-
-    private var workResult=0
+class MainActivity() : AppCompatActivity() {
+    private val db by lazy {
+        ForeCastDateBase.getInstance(applicationContext)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setup()
-//
     }
 
     private fun setup() {
-        val btn_start=findViewById<Button>(R.id.btn_start)
-        val btn_show=findViewById<Button>(R.id.btn_showToast)
-        btn_start.setOnClickListener {
-//
-            makeRxCall()
+        val btn_insert=findViewById<Button>(R.id.btn_insert)
+        val btn_update=findViewById<Button>(R.id.btn_update)
+        val btn_delete=findViewById<Button>(R.id.btn_delete)
+        val btn_query=findViewById<Button>(R.id.btn_query)
+        val btn_query_get_all=findViewById<Button>(R.id.btn_query_get_all)
+        val tv_forecast_list=findViewById<TextView>(R.id.tv_forecast_list)
+
+        btn_insert.setOnClickListener { it: View? ->
+             db.forecastDao()
+                .insert(getForecastFromInput())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {}
         }
-        btn_show.setOnClickListener {
-            Toast.makeText(this,"HELLO",Toast.LENGTH_LONG).show()
-            ForeCastDateBase.getInstance(applicationContext).forecastDao().insert(ForeCast(lat=52255.515))
+        btn_update.setOnClickListener { it: View? ->
+             db.forecastDao()
+                .update(getForecastFromInput())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {}
+        }
+        btn_delete.setOnClickListener { it: View? ->
+            db.forecastDao()
+                .delete(getForecastFromInput())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {}
+        }
+        btn_query_get_all.setOnClickListener { it: View? ->
+            db.forecastDao()
+                .getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe (
+                    {
+                        var text=""
+                        it.forEach{
+                            text+=it.toString()
+                        }
+                        tv_forecast_list.text=text
+                    }
+                    ,{
+
+                    })
         }
 
+        btn_query.setOnClickListener { it: View? ->
+            db.forecastDao()
+//                .getById(14L)
+                .deleteAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe (
+                    {
+
+                    }
+                    ,{
+
+                    })
+        }
     }
+
+    private fun getForecastFromInput(): ForeCast {
+        val ed_id=findViewById<EditText>(R.id.ed_id)
+        val ed_lat=findViewById<EditText>(R.id.ed_lat)
+        val ed_long=findViewById<EditText>(R.id.ed_long)
+        val ed_description=findViewById<EditText>(R.id.ed_description)
+
+        val id = ed_id.text?.toString().takeIf { !it.isNullOrEmpty() } ?.toLong()
+        val lat= ed_lat.text?. toString(). takeIf { !it.isNullOrEmpty() } ?.toDouble()
+        val long =ed_long.text?. toString(). takeIf { !it.isNullOrEmpty() } ?.toDouble()
+        val description=ed_description?.text.toString()
+        val current=CurrentForeCast(weather = listOf(Weather(description=description)))
+        return ForeCast(id=id,lat=lat,lon=long,current = current)
+    }
+
+    
+
+
+
+
+
 
 
     @SuppressLint("CheckResult")
     private fun makeRxCall() {
-        val textView1 = findViewById<TextView>(R.id.textView1)
-        val textView2 = findViewById<TextView>(R.id.textView2)
-
         WeatherClient.weatherApi.fetchWeather()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({
-                    textView1.text = it.current?.weather!![0].description
-                    textView2.text = it.current?.temp.toString()
-
-                },{ Toast.makeText(this,it.message,Toast.LENGTH_LONG).show()
-                })
-
-
-    }
-
-    //    just,create,fromCallable(),fromIterable()
-//    disposable,compositeDisposable
-    private fun doSomeWork() {
-    val observable = Observable.create<String> { emitter ->
-        Log.d(TAG,"${Thread.currentThread().name} Starting emitting() ")
-        Thread.sleep(1000)
-        emitter.onNext("hello")
-        Thread.sleep(3000)
-        emitter.onNext("Bishkek")
-        emitter.onComplete()
-    }
-   val observer=object:Observer<String> {
-
-       override fun onSubscribe(d: Disposable) {
-
-       }
-
-       override fun onNext(t: String) {
-            Log.d(TAG,"${Thread.currentThread().name}onNext() $t")
-       }
-
-       override fun onError(e: Throwable) {
-
-       }
-
-       override fun onComplete() {
-
-       }
-
-
-
-   }
-    observable
-            .subscribeOn(Schedulers.computation())
-            .map{
-                Log.d(TAG,"${Thread.currentThread().name} Starting mapping() ")
-                it.toUpperCase()
-            }
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer)
+            .subscribe({
+
+            }, {
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+            })
     }
 
 
-
-
-    companion object{
-        const val TAG="RX"
-    }
 }
+
+
+
