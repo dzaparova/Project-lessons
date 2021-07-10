@@ -13,8 +13,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -30,111 +32,71 @@ class MainActivity() : AppCompatActivity() {
     private val db by lazy {
         ForeCastDateBase.getInstance(applicationContext)
     }
+//    LiveData
+
+//    private val liveData=MutableLiveData<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setup()
-    }
+        makeRxCall()
+//        getFromDb()
 
-    private fun setup() {
-        val btn_insert=findViewById<Button>(R.id.btn_insert)
-        val btn_update=findViewById<Button>(R.id.btn_update)
-        val btn_delete=findViewById<Button>(R.id.btn_delete)
-        val btn_query=findViewById<Button>(R.id.btn_query)
-        val btn_query_get_all=findViewById<Button>(R.id.btn_query_get_all)
+//        val button=findViewById<Button>(R.id.button)
+////        SetValue ()  value = "",postValue()
+//        button.setOnClickListener {
+//            liveData.value="hello"
+//
+//        }
+
         val tv_forecast_list=findViewById<TextView>(R.id.tv_forecast_list)
 
-        btn_insert.setOnClickListener { it: View? ->
-             db.forecastDao()
-                .insert(getForecastFromInput())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {}
-        }
-        btn_update.setOnClickListener { it: View? ->
-             db.forecastDao()
-                .update(getForecastFromInput())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {}
-        }
-        btn_delete.setOnClickListener { it: View? ->
-            db.forecastDao()
-                .delete(getForecastFromInput())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {}
-        }
-        btn_query_get_all.setOnClickListener { it: View? ->
-            db.forecastDao()
-                .getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe (
-                    {
-                        var text=""
-                        it.forEach{
-                            text+=it.toString()
-                        }
-                        tv_forecast_list.text=text
-                    }
-                    ,{
+        db.forecastDao().getAll().observe(this, Observer {
+            tv_forecast_list.text=it?.toString()
+        })
 
-                    })
-        }
-
-        btn_query.setOnClickListener { it: View? ->
-            db.forecastDao()
-//                .getById(14L)
-                .deleteAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe (
-                    {
-
-                    }
-                    ,{
-
-                    })
-        }
     }
-
-    private fun getForecastFromInput(): ForeCast {
-        val ed_id=findViewById<EditText>(R.id.ed_id)
-        val ed_lat=findViewById<EditText>(R.id.ed_lat)
-        val ed_long=findViewById<EditText>(R.id.ed_long)
-        val ed_description=findViewById<EditText>(R.id.ed_description)
-
-        val id = ed_id.text?.toString().takeIf { !it.isNullOrEmpty() } ?.toLong()
-        val lat= ed_lat.text?. toString(). takeIf { !it.isNullOrEmpty() } ?.toDouble()
-        val long =ed_long.text?. toString(). takeIf { !it.isNullOrEmpty() } ?.toDouble()
-        val description=ed_description?.text.toString()
-        val current=CurrentForeCast(weather = listOf(Weather(description=description)))
-        return ForeCast(id=id,lat=lat,lon=long,current = current)
-    }
-
-    
-
-
-
 
 
 
 
     @SuppressLint("CheckResult")
     private fun makeRxCall() {
+//        val tv_forecast_list=findViewById<TextView>(R.id.tv_forecast_list)
         WeatherClient.weatherApi.fetchWeather()
             .subscribeOn(Schedulers.io())
+            .map {
+                db.forecastDao().deleteAll()
+                db.forecastDao().insert(it)
+                it
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-
+//                tv_forecast_list.text=it.toString()
             }, {
                 Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             })
     }
+//    @SuppressLint("CheckResult")
+//    private fun getFromDb(){
+//        val tv_forecast_list=findViewById<TextView>(R.id.tv_forecast_list)
+//        db.forecastDao()
+//            .getAll()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                       tv_forecast_list.text=it.toString()
+//            },{
+//
+//            })
+//
+//    }
 
 
 }
+
+
+
+
 
 
 

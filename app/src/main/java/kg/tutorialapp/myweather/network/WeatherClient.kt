@@ -7,11 +7,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object WeatherClient {
-    private val okhhttp by lazy {
-        val interceptor= HttpLoggingInterceptor().apply {
-            level= HttpLoggingInterceptor.Level.BODY }
+     private val okhhtp by lazy {
+        val interceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         OkHttpClient.Builder().addInterceptor(interceptor).build()
-
     }
     private val retrofit by lazy {
         Retrofit.Builder()
@@ -19,9 +17,8 @@ object WeatherClient {
 //            .baseUrl("https://jsonplaceholder.typicode.com/")
 //
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okhhttp)
+            .client(okhhtp)
             .build()
     }
     val weatherApi by lazy {
