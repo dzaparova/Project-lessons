@@ -9,7 +9,7 @@ import kg.tutorialapp.myweather.models.ForeCast
 @Dao
 interface ForeCastDao {
 //    Insert Update Delete Query
-   @Insert
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
    fun insert(forecast:ForeCast)
    @Update
    fun update(forecast: ForeCast):Completable

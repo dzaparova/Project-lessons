@@ -5,11 +5,12 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 @Entity
 data class ForeCast(
-    @PrimaryKey(autoGenerate = true)
+
     val id: Long?=null,
     var lat: Double? = null,
     var lon: Double? = null,
-    var timezone: String? = null,
+    @PrimaryKey
+    var timezone: String,
     var timezone_offset: Long? = null,
     var current: CurrentForeCast? = null,
     var hourly: List<HourlyForeCast>? = null,
