@@ -1,4 +1,4 @@
-package kg.tutorialapp.myweather
+package kg.tutorialapp.myweather.Extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
