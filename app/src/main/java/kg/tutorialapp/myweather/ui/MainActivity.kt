@@ -20,6 +20,7 @@ import kg.tutorialapp.myweather.models.ForeCast
 import kg.tutorialapp.myweather.network.WeatherClient
 import kg.tutorialapp.myweather.storage.ForeCastDateBase
 import kg.tutorialapp.myweather.ui.rv.DailyForeCastAdapter
+import kg.tutorialapp.myweather.ui.rv.HourlyForeCastAdapter
 import kotlin.math.roundToInt
 
 class MainActivity() : AppCompatActivity() {
@@ -27,6 +28,7 @@ class MainActivity() : AppCompatActivity() {
         ForeCastDateBase.getInstance(applicationContext)
     }
     private lateinit var dailyForeCastAdapter: DailyForeCastAdapter
+    private lateinit var hourlyForeCastAdapter: HourlyForeCastAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,6 +51,10 @@ class MainActivity() : AppCompatActivity() {
         val rv_daily_forecast=findViewById<RecyclerView>(R.id.rv_daily_forecast)
         dailyForeCastAdapter= DailyForeCastAdapter()
         rv_daily_forecast.adapter=dailyForeCastAdapter
+
+        val rv_hourly_forecast=findViewById<RecyclerView>(R.id.rv_hourly_forecast)
+        hourlyForeCastAdapter = HourlyForeCastAdapter()
+        rv_hourly_forecast.adapter = hourlyForeCastAdapter
     }
 
     private fun showLoading() {
@@ -87,6 +93,10 @@ class MainActivity() : AppCompatActivity() {
                 loadWeatherIcon(it)
                 it.daily?.let { dailyList->
                     dailyForeCastAdapter.setItem(dailyList)
+                }
+
+                it.hourly?.let { hourlyList ->
+                    hourlyForeCastAdapter.setItemsHourly(hourlyList)
                 }
             }
         })
